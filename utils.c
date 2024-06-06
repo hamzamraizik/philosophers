@@ -29,3 +29,14 @@ int		ft_atoi(char *s)
 		ft_exit("write a correct number!");
 	return (result);
 }
+
+// void init_philosophers(t_data *data) {
+//     for (int i = 0; i < data->number_of_philos; i++) {
+//         data->philosophers[i].id = i + 1;
+//         data->philosophers[i].times_eaten = 0;
+//         data->philosophers[i].last_meal_time = get_timestamp();
+//         data->philosophers[i].left_fork = &data->forks[i];
+//         data->philosophers[i].right_fork = &data->forks[(i + 1) % data->number_of_philosophers];
+//         data->philosophers[i].data = data;
+//     }
+// }

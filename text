@@ -1,0 +1,13 @@
+* thinking
+* trying to pick forks.
+* if it, eating
+* putting down forks
+* sleeping
+** repeat the cycle.
+
+if (pthread_lock(first fork) == 0 && pthread_lock(second fork) == 0)
+{
+    philosopher(id): eating now;
+    data->philos[i].meals_eaten += 1;
+    usleep(data->time_of_eating);
+}
