@@ -14,7 +14,28 @@ void	ft_error(t_data *data, const char *s)
 	exit(1);
 }
 
-void *philos_routine(void *arg);
+void *philos_routine(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	// (t_data *)data;
+	while(1)
+	{
+		if (data->number_of_philos % 2 == 0)
+		{
+			pthread_mutex_lock(data->philos[i].first_fork);
+			pthread_mutex_lock(data->philos[i].second_fork);
+		}
+		else
+		{
+			usleep(20);
+			pthread_mutex_lock(data->)
+		}
+	}
+	return(data);
+}
+
 void	parsing(char **av, t_data *philos)
 {
 	philos->number_of_philos = ft_atoi(av[1]);
