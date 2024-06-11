@@ -18,6 +18,7 @@ void	ft_exit(const char *s);
 int		ft_atoi(char *s);
 long	current_time(void);
 void	print_status(t_data *data, int id, const char *status);
+void	parsing(char **av, t_data *philos);
 
 typedef struct s_fork
 {
@@ -28,7 +29,6 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	long		id;
-	bool		full;
 	long		meals_counter;
 	long		last_meal_time;
 	pthread_t	thread_id;
@@ -46,10 +46,7 @@ typedef struct s_data
 	long			time_to_sleep;
 	long			how_much_time_must_eat;
 	bool			end_simulation;
-	bool			all_threads_ready;
 	t_fork			*forks;
-	long			threads_running_nbr;
-	pthread_t		monitor;
 	t_philo			*philos;
 	t_mutex			print_lock;
     t_mutex			simulation_lock;
