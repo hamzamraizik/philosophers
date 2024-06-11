@@ -30,13 +30,18 @@ int		ft_atoi(char *s)
 	return (result);
 }
 
-// void init_philosophers(t_data *data) {
-//     for (int i = 0; i < data->number_of_philos; i++) {
-//         data->philosophers[i].id = i + 1;
-//         data->philosophers[i].times_eaten = 0;
-//         data->philosophers[i].last_meal_time = get_timestamp();
-//         data->philosophers[i].left_fork = &data->forks[i];
-//         data->philosophers[i].right_fork = &data->forks[(i + 1) % data->number_of_philosophers];
-//         data->philosophers[i].data = data;
-//     }
-// }
+long current_time(void)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void print_status(t_data *data, int id, const char *status)
+{
+	pthread_mutex_lock(&data->print_lock);
+	if (!data->end_simulation)
+		printf("%ld %d %s\n", current_time(), id, status);
+	pthread_mutex_unlock(&data->print_lock);
+}
