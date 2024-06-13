@@ -6,18 +6,14 @@ void	ft_exit(const char *s)
 	exit(1);
 }
 
-void	parsing(char **av, t_data *philos)
+void	ft_error(t_data *data, const char *s)
 {
-	philos->number_of_philos = ft_atoi(av[1]);
-	// from ms to microsecond.
-	philos->time_to_die = ft_atoi(av[2]) * 1000;
-	philos->time_to_eat = ft_atoi(av[3]) * 1000;
-	philos->time_to_sleep = ft_atoi(av[4]) * 1000;
-	if (av[5])
-		philos->how_much_time_must_eat = ft_atoi(av[5]);
-	else
-		philos->how_much_time_must_eat = -1;
-	philos->end_simulation = 0;
+	if (data->forks)
+		free(data->forks);
+	if (data->philos)
+		free(data->philos);
+	printf("%s\n", s);
+	exit(1);
 }
 
 int		ft_atoi(char *s)
@@ -44,19 +40,13 @@ int		ft_atoi(char *s)
 	return (result);
 }
 
-
-long current_time(void)
+void ft_usleep(long time)
 {
-	struct timeval tv;
+	long	time_before;
 
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000000 + tv.tv_usec);
-}
-
-void print_status(t_data *data, int id, const char *status)
-{
-	pthread_mutex_lock(&data->print_lock);
-	if (!data->end_simulation)
-		printf("%ld %d %s\n", current_time(), id, status);
-	pthread_mutex_unlock(&data->print_lock);
+	time_before = current_time();
+	while (current_time() - time_before > time)
+	{
+		usleep(100);
+	}
 }

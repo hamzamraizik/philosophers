@@ -15,10 +15,20 @@ typedef struct s_data t_data;
 
 // utils
 void	ft_exit(const char *s);
+void	ft_error(t_data *data, const char *s);
 int		ft_atoi(char *s);
 long	current_time(void);
 void	print_status(t_data *data, int id, const char *status);
+void	ft_usleep(long time);
+void	ft_thinking(t_data *data, long philo_id);
+void	ft_eating(t_data *data, int i);
+void	ft_sleeping(t_data *data, int i);
+void	init_philos(t_data *data);
+void	init_data(t_data *data);
+void	*philos_routine(void *void_data);
+void	*routine_monitor(void *void_data);
 void	parsing(char **av, t_data *philos);
+void	ft_end(t_data *philos, int j);
 
 typedef struct s_fork
 {
@@ -50,6 +60,7 @@ typedef struct s_data
 	t_philo			*philos;
 	t_mutex			print_lock;
     t_mutex			simulation_lock;
+	pthread_t		monitor_thread;
 }			t_data;
 
 #endif //PHILO_H
