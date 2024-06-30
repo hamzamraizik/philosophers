@@ -47,6 +47,6 @@ void ft_usleep(long time)
 	time_before = current_time();
 	while (current_time() - time_before > time)
 	{
-		usleep(100);
+		usleep(300);
 	}
 }

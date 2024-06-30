@@ -26,6 +26,7 @@ void	init_philos(t_data *data)
 	}
 	if (pthread_join(data->monitor_thread, NULL) != 0)
 		ft_error(data, "pthread join failed");
+	return ;
 }
 
 void	init_data(t_data *data)

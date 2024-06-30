@@ -55,7 +55,9 @@ typedef struct s_data
 	long			time_to_eat;
 	long			time_to_sleep;
 	long			how_much_time_must_eat;
+	long			is_full_counter;
 	bool			end_simulation;
+	long			start_time;
 	t_fork			*forks;
 	t_philo			*philos;
 	t_mutex			print_lock;

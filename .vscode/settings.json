@@ -1,0 +1,6 @@
+{
+    "javascript.preferGoToSourceDefinition": false,
+    "typescript.preferGoToSourceDefinition": true,
+    "editor.definitionLinkOpensInPeek": true,
+    "editor.multiCursorModifier": "ctrlCmd"
+}
