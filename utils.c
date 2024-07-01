@@ -39,7 +39,22 @@ int		ft_atoi(char *s)
 		ft_exit("write a correct number!");
 	return (result);
 }
+/*int    get_time(t_data *data)
+{
+    struct timeval time;
 
+    gettimeofday(&time, NULL);
+    return (time.tv_sec * 1000 + time.tv_usec / 1000 - data->start_time);
+}
+
+void    good_usleep(t_data *data, int time)
+{
+    int    start_time;
+
+    start_time = get_time(data); //actual time
+    while (get_time(data) - start_time < time)
+        usleep(200);
+}*/
 void ft_usleep(long time)
 {
 	long	time_before;
@@ -47,6 +62,6 @@ void ft_usleep(long time)
 	time_before = current_time();
 	while (current_time() - time_before > time)
 	{
-		usleep(300);
+		usleep(200);
 	}
 }
