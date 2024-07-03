@@ -1,5 +1,19 @@
 
 #include "philo.h"
+int check(t_data *data)
+{
+	pthread_mutex_lock(&data->simulation_lock);
+	if (data->end_simulation)
+	{
+		pthread_mutex_unlock(&data->simulation_lock);
+		return (1);
+	}
+	else
+	{
+		pthread_mutex_unlock(&data->simulation_lock);
+		return (0);
+	}
+}
 
 void *philos_routine(void *void_data)
 {
@@ -8,14 +22,8 @@ void *philos_routine(void *void_data)
 
 	philo = (t_philo*)void_data;
 	data = philo->data;
-	while (1)
+	while (!check(data))
 	{
-		// if (philo->id % 2 != 0)
-		// 	usleep(200);
-		pthread_mutex_lock(&data->simulation_lock);
-		if (data->end_simulation)
-			return (NULL);
-		pthread_mutex_unlock(&data->simulation_lock);
 		if (philo->id % 2 != 0)
 		{
 			pthread_mutex_lock(&philo->first_fork->fork);
@@ -87,7 +95,7 @@ void *routine_monitor(void *void_data)
 	int		count;
 
 	data = (t_data *)void_data;
-	while (!data->end_simulation)
+	while (1)
 	{
 		i = 0;
 		count = 0;
@@ -95,13 +103,16 @@ void *routine_monitor(void *void_data)
 		{
 			pthread_mutex_lock(&data->simulation_lock);
 			if (data->end_simulation)
-				break ; 
+			{
+				pthread_mutex_unlock(&data->simulation_lock);
+				return NULL; 
+			}
             if ((current_time() - data->philos[i].last_meal_time) > data->time_to_die)
 			{
 				print_status(data, data->philos[i].id, "died");
 				data->end_simulation = true;
 				pthread_mutex_unlock(&data->simulation_lock);
-				break ;
+				return (NULL);
 			}
 			if (data->how_much_time_must_eat != -1 && data->philos[i].meals_counter >= data->how_much_time_must_eat)
 				count += 1;
@@ -110,7 +121,8 @@ void *routine_monitor(void *void_data)
 				print_status(data, count, "are all full, end semulation");
 				data->end_simulation = true;
 				pthread_mutex_unlock(&data->simulation_lock);
-				break ;
+				return NULL;
+				// break ;
 			}
 			pthread_mutex_unlock(&data->simulation_lock);
 			i++;
@@ -141,10 +153,14 @@ void	ft_end(t_data *philos, int j)
 
 	i = -1;
 	(void)j;
+	// pthread_detach((philos->monitor_thread));
+	while (++i < philos->number_of_philos)
+			pthread_detach((philos->philos[i].thread_id));
+	i = -1;
 	while (++i < philos->number_of_philos)
 		pthread_mutex_destroy(&philos->forks[i].fork);
 	pthread_mutex_destroy(&philos->print_lock);
-	// pthread_mutex_destroy(&philos->simulation_lock);
+	pthread_mutex_destroy(&philos->simulation_lock);
 	free(philos->forks);
 	free(philos->philos);
 	return ;
