@@ -35,7 +35,7 @@ void *philos_routine(void *void_data)
 		}
 		else
 		{
-			usleep(300);
+			usleep(data->time_to_eat / 2);
 			pthread_mutex_lock(&philo->second_fork->fork);
 			print_status(data, philo->id, "has taken a fork");
 			pthread_mutex_lock(&philo->first_fork->fork);
