@@ -10,10 +10,6 @@ void	ft_eating(t_data *data, int i)
 {
 	print_status(data, i, "is eating");
 	ft_usleep(data->time_to_eat);
-	// pthread_mutex_lock(&data->simulation_lock);
-	// data->philos[i].last_meal_time = current_time();
-	// data->philos[i].meals_counter += 1;
-	// pthread_mutex_unlock(&data->simulation_lock);
 }
 
 void	ft_thinking(t_data *data, long philo_id)
@@ -21,15 +17,15 @@ void	ft_thinking(t_data *data, long philo_id)
 	print_status(data, philo_id, "is thinking");
 }
 
-long current_time(void)
+long	current_time(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void print_status(t_data *data, int id, const char *status)
+void	print_status(t_data *data, int id, const char *status)
 {
 	pthread_mutex_lock(&data->print_lock);
 	if (!check(data))

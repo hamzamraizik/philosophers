@@ -45,12 +45,11 @@ void	*routine_monitor(void *void_data)
 			if (check_time_dead(data, i) == 1)
 				return (NULL);
 			pthread_mutex_lock(&data->simulation_lock);
-			if (data->how_much_time_must_eat != -1 && data->philos[i].meals_counter
-				>= data->how_much_time_must_eat)
+			if (data->must_eat != -1 && data->philos[i].meals_counter
+				>= data->must_eat)
 				count += 1;
 			pthread_mutex_unlock(&data->simulation_lock);
-			if (check_meals_full_dead(data, count) == 1)
-				return (NULL);
+			(check_meals_full_dead(data, count) == 1) && (return (NULL));
 		}
 		usleep(1000);
 	}
@@ -66,9 +65,9 @@ void	parsing(char **av, t_data *philos)
 	philos->is_full_counter = 0;
 	philos->start_time = current_time();
 	if (av[5])
-		philos->how_much_time_must_eat = ft_atoi(av[5]);
+		philos->must_eat = ft_atoi(av[5]);
 	else
-		philos->how_much_time_must_eat = -1;
+		philos->must_eat = -1;
 	philos->end_simulation = false;
 }
 
@@ -78,7 +77,6 @@ void	ft_end(t_data *philos, int j)
 
 	i = -1;
 	(void)j;
-	// pthread_detach((philos->monitor_thread));
 	while (++i < philos->number_of_philos)
 		pthread_detach((philos->philos[i].thread_id));
 	i = -1;

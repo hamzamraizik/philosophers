@@ -16,7 +16,7 @@ void	ft_error(t_data *data, const char *s)
 	exit(1);
 }
 
-int		ft_atoi(char *s)
+int	ft_atoi(char *s)
 {
 	int		i;
 	int		result;
@@ -40,7 +40,7 @@ int		ft_atoi(char *s)
 	return (result);
 }
 
-void ft_usleep(long time)
+void	ft_usleep(long time)
 {
 	long	time_before;
 

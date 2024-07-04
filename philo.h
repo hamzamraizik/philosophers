@@ -1,5 +1,5 @@
 #ifndef PHILO_H
-#define PHILO_H
+# define PHILO_H
 
 # include <pthread.h>
 # include <stdlib.h>
@@ -10,9 +10,10 @@
 # include <sys/time.h>
 
 # define RED  "\x1B[31m"
+
 typedef pthread_mutex_t	t_mutex;
-typedef struct s_data t_data;
-typedef struct s_philo t_philo;
+typedef struct s_data	t_data;
+typedef struct s_philo	t_philo;
 
 // utils
 void	ft_exit(const char *s);
@@ -61,14 +62,14 @@ typedef struct s_data
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
-	long			how_much_time_must_eat;
+	long			must_eat;
 	long			is_full_counter;
 	bool			end_simulation;
 	long			start_time;
 	t_fork			*forks;
 	t_philo			*philos;
 	t_mutex			print_lock;
-    t_mutex			simulation_lock;
+	t_mutex			simulation_lock;
 	pthread_t		monitor_thread;
 }			t_data;
 
