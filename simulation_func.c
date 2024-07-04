@@ -10,6 +10,10 @@ void	ft_eating(t_data *data, int i)
 {
 	print_status(data, i, "is eating");
 	ft_usleep(data->time_to_eat);
+	// pthread_mutex_lock(&data->simulation_lock);
+	// data->philos[i].last_meal_time = current_time();
+	// data->philos[i].meals_counter += 1;
+	// pthread_mutex_unlock(&data->simulation_lock);
 }
 
 void	ft_thinking(t_data *data, long philo_id)

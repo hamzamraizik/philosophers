@@ -12,6 +12,7 @@
 # define RED  "\x1B[31m"
 typedef pthread_mutex_t	t_mutex;
 typedef struct s_data t_data;
+typedef struct s_philo t_philo;
 
 // utils
 void	ft_exit(const char *s);
@@ -31,6 +32,10 @@ void	parsing(char **av, t_data *philos);
 void	ft_end(t_data *philos, int j);
 void	ft_unlock(t_data *data);
 int		check(t_data *data);
+int		check_time_dead(t_data *data, int i);
+int		check_meals_full_dead(t_data *data, int count);
+void	ft_unlock(t_data *data);
+void	update_infos_of_philo(t_data *data, t_philo *philo);
 
 typedef struct s_fork
 {

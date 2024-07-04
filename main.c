@@ -1,51 +1,24 @@
-
 #include "philo.h"
-int check(t_data *data)
-{
-	pthread_mutex_lock(&data->simulation_lock);
-	if (data->end_simulation)
-	{
-		pthread_mutex_unlock(&data->simulation_lock);
-		return (1);
-	}
-	else
-	{
-		pthread_mutex_unlock(&data->simulation_lock);
-		return (0);
-	}
-}
 
-void *philos_routine(void *void_data)
+void	*philos_routine(void *void_data)
 {
-	t_data *data;
-	t_philo *philo;
+	t_data	*data;
+	t_philo	*philo;
 
-	philo = (t_philo*)void_data;
+	philo = (t_philo *)void_data;
 	data = philo->data;
+	if (philo->id % 2 == 0)
+		ft_usleep(data->time_to_eat / 2);
 	while (!check(data))
 	{
-		if (philo->id % 2 != 0)
-		{
-			pthread_mutex_lock(&philo->first_fork->fork);
-			print_status(data, philo->id, "has taken a fork");
-			if (data->number_of_philos == 1)
-				return (pthread_mutex_unlock(&philo->first_fork->fork), NULL);
-			pthread_mutex_lock(&philo->second_fork->fork);
-			print_status(data, philo->id, "has taken a fork");
-		}
-		else
-		{
-			usleep(data->time_to_eat / 2);
-			pthread_mutex_lock(&philo->second_fork->fork);
-			print_status(data, philo->id, "has taken a fork");
-			pthread_mutex_lock(&philo->first_fork->fork);
-			print_status(data, philo->id, "has taken a fork");
-		}
+		pthread_mutex_lock(&philo->first_fork->fork);
+		print_status(data, philo->id, "has taken a fork");
+		if (data->number_of_philos == 1)
+			return (pthread_mutex_unlock(&philo->first_fork->fork), NULL);
+		pthread_mutex_lock(&philo->second_fork->fork);
+		print_status(data, philo->id, "has taken a fork");
 		ft_eating(data, philo->id);
-		pthread_mutex_lock(&data->simulation_lock);
-		philo->last_meal_time = current_time();
-		philo->meals_counter += 1;
-		pthread_mutex_unlock(&data->simulation_lock);
+		update_infos_of_philo(data, philo);
 		pthread_mutex_unlock(&philo->first_fork->fork);
 		pthread_mutex_unlock(&philo->second_fork->fork);
 		ft_sleeping(data, philo->id);
@@ -54,19 +27,7 @@ void *philos_routine(void *void_data)
 	return (NULL);
 }
 
-void ft_unlock(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < data->number_of_philos)
-	{
-		pthread_mutex_unlock(&data->philos[i].first_fork->fork);
-		pthread_mutex_unlock(&data->philos[i].second_fork->fork);
-	}
-}
-
-void *routine_monitor(void *void_data)
+void	*routine_monitor(void *void_data)
 {
 	t_data	*data;
 	int		i;
@@ -75,35 +36,23 @@ void *routine_monitor(void *void_data)
 	data = (t_data *)void_data;
 	while (1)
 	{
-		i = 0;
+		i = -1;
 		count = 0;
-		while (i < data->number_of_philos)
+		while (++i < data->number_of_philos)
 		{
 			if (check(data))
-				return NULL;
-            if ((current_time() - data->philos[i].last_meal_time) > data->time_to_die)
-			{
-				print_status(data, data->philos[i].id, "died");
-				pthread_mutex_lock(&data->simulation_lock);
-				data->end_simulation = true;
-				pthread_mutex_unlock(&data->simulation_lock);
-				// ft_unlock(data);
 				return (NULL);
-			}
-			if (data->how_much_time_must_eat != -1 && data->philos[i].meals_counter >= data->how_much_time_must_eat)
+			if (check_time_dead(data, i) == 1)
+				return (NULL);
+			pthread_mutex_lock(&data->simulation_lock);
+			if (data->how_much_time_must_eat != -1 && data->philos[i].meals_counter
+				>= data->how_much_time_must_eat)
 				count += 1;
-			if (count == data->number_of_philos)
-			{
-				print_status(data, count, "are all full, end semulation");
-				data->end_simulation = true;
-				pthread_mutex_unlock(&data->simulation_lock);
-				return NULL;
-				// break ;
-			}
 			pthread_mutex_unlock(&data->simulation_lock);
-			i++;
+			if (check_meals_full_dead(data, count) == 1)
+				return (NULL);
 		}
-		usleep(100);
+		usleep(1000);
 	}
 	return (NULL);
 }
@@ -125,13 +74,13 @@ void	parsing(char **av, t_data *philos)
 
 void	ft_end(t_data *philos, int j)
 {
-	int		i;
+	int	i;
 
 	i = -1;
 	(void)j;
 	// pthread_detach((philos->monitor_thread));
 	while (++i < philos->number_of_philos)
-			pthread_detach((philos->philos[i].thread_id));
+		pthread_detach((philos->philos[i].thread_id));
 	i = -1;
 	while (++i < philos->number_of_philos)
 		pthread_mutex_destroy(&philos->forks[i].fork);
@@ -142,7 +91,7 @@ void	ft_end(t_data *philos, int j)
 	return ;
 }
 
-int main(int ac, char *av[])
+int	main(int ac, char *av[])
 {
 	t_data	philos;
 
@@ -152,6 +101,8 @@ int main(int ac, char *av[])
 		ft_exit("the number of arguments not enough 🙅!");
 	init_data(&philos);
 	init_philos(&philos);
+	free(philos.forks);
+	free(philos.philos);
 	// ft_end(&philos, 0);
-	return 0;
+	return (0);
 }

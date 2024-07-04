@@ -11,20 +11,19 @@ void	init_philos(t_data *data)
 		data->philos[i].meals_counter = 0;
 		data->philos[i].last_meal_time = current_time();
 		data->philos[i].first_fork = &data->forks[i];
-		// if (data->number_of_philos > 1)
-		data->philos[i].second_fork = &data->forks[(i + 1) % data->number_of_philos];
+		data->philos[i].second_fork
+			= &data->forks[(i + 1) % data->number_of_philos];
 		data->philos[i].data = data;
-		if (pthread_create(&data->philos[i].thread_id, NULL, philos_routine, &data->philos[i]) != 0)
+		if (pthread_create(&data->philos[i].thread_id, NULL
+				, philos_routine, &data->philos[i]) != 0)
 			ft_error(data, "pthread create failed!");
 	}
 	if (pthread_create(&data->monitor_thread, NULL, routine_monitor, data) != 0)
 		ft_error(data, "pthread create failed!");
 	i = -1;
 	while (++i < data->number_of_philos)
-	{
 		if (pthread_join(data->philos[i].thread_id, NULL) != 0)
 			ft_error(data, "pthread join failed");
-	}
 	if (pthread_join(data->monitor_thread, NULL) != 0)
 		ft_error(data, "pthread join failed");
 	return ;
