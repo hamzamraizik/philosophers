@@ -28,7 +28,7 @@ long current_time(void)
 void print_status(t_data *data, int id, const char *status)
 {
 	pthread_mutex_lock(&data->print_lock);
-	if (!data->end_simulation)
-		printf("%ld %d %s\n", current_time(), id, status);
+	if (!check(data))
+		printf("%ld %d %s\n", current_time() - data->start_time, id, status);
 	pthread_mutex_unlock(&data->print_lock);
 }

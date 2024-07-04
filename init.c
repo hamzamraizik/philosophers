@@ -11,6 +11,7 @@ void	init_philos(t_data *data)
 		data->philos[i].meals_counter = 0;
 		data->philos[i].last_meal_time = current_time();
 		data->philos[i].first_fork = &data->forks[i];
+		// if (data->number_of_philos > 1)
 		data->philos[i].second_fork = &data->forks[(i + 1) % data->number_of_philos];
 		data->philos[i].data = data;
 		if (pthread_create(&data->philos[i].thread_id, NULL, philos_routine, &data->philos[i]) != 0)

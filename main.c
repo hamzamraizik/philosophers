@@ -28,6 +28,8 @@ void *philos_routine(void *void_data)
 		{
 			pthread_mutex_lock(&philo->first_fork->fork);
 			print_status(data, philo->id, "has taken a fork");
+			if (data->number_of_philos == 1)
+				return (pthread_mutex_unlock(&philo->first_fork->fork), NULL);
 			pthread_mutex_lock(&philo->second_fork->fork);
 			print_status(data, philo->id, "has taken a fork");
 		}
@@ -44,7 +46,6 @@ void *philos_routine(void *void_data)
 		philo->last_meal_time = current_time();
 		philo->meals_counter += 1;
 		pthread_mutex_unlock(&data->simulation_lock);
-		// printf("%ld\n", philo->meals_counter);
 		pthread_mutex_unlock(&philo->first_fork->fork);
 		pthread_mutex_unlock(&philo->second_fork->fork);
 		ft_sleeping(data, philo->id);
@@ -53,40 +54,17 @@ void *philos_routine(void *void_data)
 	return (NULL);
 }
 
-// void *philos_routine(void *void_data)
-// {
-//     t_data *data;
-//     t_philo *philo;
-//
-//     philo = (t_philo*)void_data;
-//     data = philo->data;
-//     while (1)
-//     {
-//         // if (philo->id % 2 != 0)
-//         //     usleep(200);
-//         pthread_mutex_lock(&data->simulation_lock);
-//         if (data->end_simulation)
-//             return (NULL);
-//         pthread_mutex_unlock(&data->simulation_lock);
-//
-//         t_fork *first_fork = philo->id < philo->second_fork->fork_id ? philo->first_fork : philo->second_fork;
-//         t_fork *second_fork = philo->id < philo->second_fork->fork_id ? philo->second_fork : philo->first_fork;
-//
-//         pthread_mutex_lock(&first_fork->fork);
-//         print_status(data, philo->id, "has taken a fork");
-//         pthread_mutex_lock(&second_fork->fork);
-//         print_status(data, philo->id, "has taken a fork");
-//
-//         ft_eating(data, philo->id);
-//         philo->last_meal_time = current_time();
-//         philo->meals_counter += 1;
-//         pthread_mutex_unlock(&first_fork->fork);
-//         pthread_mutex_unlock(&second_fork->fork);
-//         ft_sleeping(data, philo->id);
-//         ft_thinking(data, philo->id);
-//     }
-//     return (NULL);
-// }
+void ft_unlock(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->number_of_philos)
+	{
+		pthread_mutex_unlock(&data->philos[i].first_fork->fork);
+		pthread_mutex_unlock(&data->philos[i].second_fork->fork);
+	}
+}
 
 void *routine_monitor(void *void_data)
 {
@@ -101,17 +79,15 @@ void *routine_monitor(void *void_data)
 		count = 0;
 		while (i < data->number_of_philos)
 		{
-			pthread_mutex_lock(&data->simulation_lock);
-			if (data->end_simulation)
-			{
-				pthread_mutex_unlock(&data->simulation_lock);
-				return NULL; 
-			}
+			if (check(data))
+				return NULL;
             if ((current_time() - data->philos[i].last_meal_time) > data->time_to_die)
 			{
 				print_status(data, data->philos[i].id, "died");
+				pthread_mutex_lock(&data->simulation_lock);
 				data->end_simulation = true;
 				pthread_mutex_unlock(&data->simulation_lock);
+				// ft_unlock(data);
 				return (NULL);
 			}
 			if (data->how_much_time_must_eat != -1 && data->philos[i].meals_counter >= data->how_much_time_must_eat)

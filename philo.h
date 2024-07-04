@@ -29,6 +29,8 @@ void	*philos_routine(void *void_data);
 void	*routine_monitor(void *void_data);
 void	parsing(char **av, t_data *philos);
 void	ft_end(t_data *philos, int j);
+void	ft_unlock(t_data *data);
+int		check(t_data *data);
 
 typedef struct s_fork
 {
