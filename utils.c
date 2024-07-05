@@ -40,13 +40,15 @@ int	ft_atoi(char *s)
 	return (result);
 }
 
-void	ft_usleep(long time)
+void	ft_usleep(long time, t_data *data)
 {
 	long	time_before;
 
 	time_before = current_time();
 	while (current_time() - time_before < time)
 	{
+		if (check(data) == 1)
+			return ;
 		usleep(100);
 	}
 }

@@ -21,7 +21,7 @@ void	ft_error(t_data *data, const char *s);
 int		ft_atoi(char *s);
 long	current_time(void);
 void	print_status(t_data *data, int id, const char *status);
-void	ft_usleep(long time);
+void	ft_usleep(long time, t_data *data);
 void	ft_thinking(t_data *data, long philo_id);
 void	ft_eating(t_data *data, int i);
 void	ft_sleeping(t_data *data, int i);

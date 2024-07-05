@@ -8,11 +8,8 @@ int	check(t_data *data)
 		pthread_mutex_unlock(&data->simulation_lock);
 		return (1);
 	}
-	else
-	{
-		pthread_mutex_unlock(&data->simulation_lock);
-		return (0);
-	}
+	pthread_mutex_unlock(&data->simulation_lock);
+	return (0);
 }
 
 int	check_time_dead(t_data *data, int i)
@@ -20,9 +17,11 @@ int	check_time_dead(t_data *data, int i)
 	pthread_mutex_lock(&data->simulation_lock);
 	if ((current_time() - data->philos[i].last_meal_time) > data->time_to_die)
 	{
+		pthread_mutex_unlock(&data->simulation_lock);
 		print_status(data, data->philos[i].id, "died");
+		pthread_mutex_lock(&data->simulation_lock);
 		data->end_simulation = true;
-		return (1);
+		return (pthread_mutex_unlock(&data->simulation_lock), 1);
 	}
 	pthread_mutex_unlock(&data->simulation_lock);
 	return (0);

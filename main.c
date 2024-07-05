@@ -8,8 +8,8 @@ void	*philos_routine(void *void_data)
 	philo = (t_philo *)void_data;
 	data = philo->data;
 	if (philo->id % 2 == 0)
-		ft_usleep(data->time_to_eat / 2);
-	while (!check(data))
+		ft_usleep(data->time_to_eat / 2, data);
+	while (check(data) == 0)
 	{
 		pthread_mutex_lock(&philo->first_fork->fork);
 		print_status(data, philo->id, "has taken a fork");
@@ -34,22 +34,22 @@ void	*routine_monitor(void *void_data)
 	int		count;
 
 	data = (t_data *)void_data;
-	while (1)
+	while (!check(data))
 	{
 		i = -1;
 		count = 0;
 		while (++i < data->number_of_philos)
 		{
-			if (check(data))
+			if (check(data) == 1)
 				return (NULL);
 			if (check_time_dead(data, i) == 1)
 				return (NULL);
 			pthread_mutex_lock(&data->simulation_lock);
-			if (data->must_eat != -1 && data->philos[i].meals_counter
-				>= data->must_eat)
-				count += 1;
+			(data->must_eat != -1 && data->philos[i].meals_counter
+				>= data->must_eat) && (count += 1);
 			pthread_mutex_unlock(&data->simulation_lock);
-			(check_meals_full_dead(data, count) == 1) && (return (NULL));
+			if (check_meals_full_dead(data, count) == 1)
+				return (NULL);
 		}
 		usleep(1000);
 	}
