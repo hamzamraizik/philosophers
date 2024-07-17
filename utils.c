@@ -1,20 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:05:20 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/07/17 11:05:21 by hmraizik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
-
-void	ft_exit(const char *s)
-{
-	printf(RED"%s", s);
-	exit(1);
-}
-
-void	ft_error(t_data *data, const char *s)
-{
-	if (data->forks)
-		free(data->forks);
-	if (data->philos)
-		free(data->philos);
-	printf("%s\n", s);
-	exit(1);
-}
 
 int	ft_atoi(char *s)
 {
@@ -31,12 +27,12 @@ int	ft_atoi(char *s)
 	{
 		result = result * 10 + s[i] - '0';
 		if (result < number)
-			ft_exit("you've passed a big number");
+			return (-1);
 		number = result;
 		i++;
 	}
 	if (s[i])
-		ft_exit("write a correct number!");
+		return (-1);
 	return (result);
 }
 

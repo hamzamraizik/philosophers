@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:04:51 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/07/17 11:04:54 by hmraizik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -9,15 +21,17 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
-# define RED  "\x1B[31m"
+// # define RED  "\x1B[31m"
+// # define MALLOC_ERROR -2
+// # define CREATE_THREAD_FAILS -3
+// # define JOIN_THREAD_FAILS -4
+// # define MUTEX_ERROR -5
 
 typedef pthread_mutex_t	t_mutex;
 typedef struct s_data	t_data;
 typedef struct s_philo	t_philo;
 
 // utils
-void	ft_exit(const char *s);
-void	ft_error(t_data *data, const char *s);
 int		ft_atoi(char *s);
 long	current_time(void);
 void	print_status(t_data *data, int id, const char *status);
@@ -25,11 +39,11 @@ void	ft_usleep(long time, t_data *data);
 void	ft_thinking(t_data *data, long philo_id);
 void	ft_eating(t_data *data, int i);
 void	ft_sleeping(t_data *data, int i);
-void	init_philos(t_data *data);
-void	init_data(t_data *data);
+int		init_philos(t_data *data);
+int		init_data(t_data *data);
 void	*philos_routine(void *void_data);
 void	*routine_monitor(void *void_data);
-void	parsing(char **av, t_data *philos);
+int		parsing(char **av, t_data *philos);
 void	ft_end(t_data *philos, int j);
 void	ft_unlock(t_data *data);
 int		check(t_data *data);

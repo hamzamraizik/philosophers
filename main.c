@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:05:08 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/07/17 11:05:09 by hmraizik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	*philos_routine(void *void_data)
@@ -56,7 +68,7 @@ void	*routine_monitor(void *void_data)
 	return (NULL);
 }
 
-void	parsing(char **av, t_data *philos)
+int	parsing(char **av, t_data *philos)
 {
 	philos->number_of_philos = ft_atoi(av[1]);
 	philos->time_to_die = ft_atoi(av[2]);
@@ -68,7 +80,12 @@ void	parsing(char **av, t_data *philos)
 		philos->must_eat = ft_atoi(av[5]);
 	else
 		philos->must_eat = -1;
+	if (philos->number_of_philos == -1 || philos->time_to_die == -1
+		|| philos->time_to_eat == -1 || philos->time_to_sleep == -1
+		|| (av[5] && philos->must_eat == -1))
+		return (-1);
 	philos->end_simulation = false;
+	return (0);
 }
 
 void	ft_end(t_data *philos, int j)
@@ -94,13 +111,18 @@ int	main(int ac, char *av[])
 	t_data	philos;
 
 	if (ac == 5 || ac == 6)
-		parsing(av, &philos);
+	{
+		if (parsing(av, &philos) == -1)
+			return (printf("wrong arguments!!"), 1);
+	}
 	else
-		ft_exit("the number of arguments not enough 🙅!");
-	init_data(&philos);
-	init_philos(&philos);
+		return (printf("the number of arguments not enough 🙅!"), 1);
+	if (init_data(&philos) == -1)
+		return (printf("mutexes initialization error"), 1);
+	if (init_philos(&philos) == -1)
+		return (free(philos.forks), free(philos.philos)
+			, printf("errore in threads initialization"), 1);
 	free(philos.forks);
 	free(philos.philos);
-	// ft_end(&philos, 0);
 	return (0);
 }
