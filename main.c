@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mizoo <mizoo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:05:08 by hmraizik          #+#    #+#             */
-/*   Updated: 2024/07/17 11:05:09 by hmraizik         ###   ########.fr       */
+/*   Updated: 2024/08/05 15:11:57 by mizoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	*routine_monitor(void *void_data)
 			if (check_time_dead(data, i) == 1)
 				return (NULL);
 			pthread_mutex_lock(&data->simulation_lock);
-			(data->must_eat != -1 && data->philos[i].meals_counter
-				>= data->must_eat) && (count += 1);
+			if (data->must_eat != -1 && data->philos[i].meals_counter >= data->must_eat)
+					count += 1;
 			pthread_mutex_unlock(&data->simulation_lock);
 			if (check_meals_full_dead(data, count) == 1)
 				return (NULL);
@@ -80,30 +80,14 @@ int	parsing(char **av, t_data *philos)
 		philos->must_eat = ft_atoi(av[5]);
 	else
 		philos->must_eat = -1;
-	if (philos->number_of_philos == -1 || philos->time_to_die == -1
+	if (philos->number_of_philos == -1 
+		|| philos->number_of_philos == 0
+		|| philos->time_to_die == -1
 		|| philos->time_to_eat == -1 || philos->time_to_sleep == -1
 		|| (av[5] && philos->must_eat == -1))
 		return (-1);
 	philos->end_simulation = false;
 	return (0);
-}
-
-void	ft_end(t_data *philos, int j)
-{
-	int	i;
-
-	i = -1;
-	(void)j;
-	while (++i < philos->number_of_philos)
-		pthread_detach((philos->philos[i].thread_id));
-	i = -1;
-	while (++i < philos->number_of_philos)
-		pthread_mutex_destroy(&philos->forks[i].fork);
-	pthread_mutex_destroy(&philos->print_lock);
-	pthread_mutex_destroy(&philos->simulation_lock);
-	free(philos->forks);
-	free(philos->philos);
-	return ;
 }
 
 int	main(int ac, char *av[])
@@ -113,7 +97,7 @@ int	main(int ac, char *av[])
 	if (ac == 5 || ac == 6)
 	{
 		if (parsing(av, &philos) == -1)
-			return (printf("wrong arguments!!"), 1);
+			return (printf("wrong arguments!!\n"), 1);
 	}
 	else
 		return (printf("the number of arguments not enough 🙅!"), 1);

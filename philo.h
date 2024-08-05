@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mizoo <mizoo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:04:51 by hmraizik          #+#    #+#             */
-/*   Updated: 2024/07/17 11:04:54 by hmraizik         ###   ########.fr       */
+/*   Updated: 2024/08/05 15:07:54 by mizoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int		init_data(t_data *data);
 void	*philos_routine(void *void_data);
 void	*routine_monitor(void *void_data);
 int		parsing(char **av, t_data *philos);
-void	ft_end(t_data *philos, int j);
 void	ft_unlock(t_data *data);
 int		check(t_data *data);
 int		check_time_dead(t_data *data, int i);
@@ -66,7 +65,6 @@ typedef struct s_philo
 	pthread_t	thread_id;
 	t_fork		*first_fork;
 	t_fork		*second_fork;
-	t_mutex		philo_mutex;
 	t_data		*data;
 }		t_philo;
 
