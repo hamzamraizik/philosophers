@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 11:05:20 by hmraizik          #+#    #+#             */
-/*   Updated: 2024/07/17 11:05:21 by hmraizik         ###   ########.fr       */
+/*   Created: 2024/09/02 00:43:55 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/09/02 02:28:26 by hmraizik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	ft_atoi(char *s)
 {
@@ -36,15 +36,26 @@ int	ft_atoi(char *s)
 	return (result);
 }
 
-void	ft_usleep(long time, t_data *data)
+int	ft_strlen(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	write(fd, s, ft_strlen(s));
+}
+
+void	ft_usleep(long time)
 {
 	long	time_before;
 
 	time_before = current_time();
 	while (current_time() - time_before < time)
-	{
-		if (check(data) == 1)
-			return ;
 		usleep(100);
-	}
 }

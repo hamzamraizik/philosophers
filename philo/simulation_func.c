@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 11:05:14 by hmraizik          #+#    #+#             */
-/*   Updated: 2024/08/27 09:58:49 by hmraizik         ###   ########.fr       */
+/*   Created: 2024/09/06 18:20:57 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/09/15 19:51:31 by hmraizik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ long	current_time(void)
 
 void	print_status(t_data *data, int id, const char *status)
 {
-	sem_wait(data->print_lock);
-	if (check(data) == 0)
+	pthread_mutex_lock(&data->print_lock);
+	usleep(5);
+	if (!check(data))
 		printf("%ld %d %s\n", current_time() - data->start_time, id, status);
-	sem_post(data->print_lock);
+	pthread_mutex_unlock(&data->print_lock);
 }
-

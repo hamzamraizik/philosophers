@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 11:05:28 by hmraizik          #+#    #+#             */
-/*   Updated: 2024/07/17 11:05:29 by hmraizik         ###   ########.fr       */
+/*   Created: 2024/09/06 18:21:12 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/09/08 18:23:23 by hmraizik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	check(t_data *data)
 int	check_time_dead(t_data *data, int i)
 {
 	pthread_mutex_lock(&data->simulation_lock);
-	if ((current_time() - data->philos[i].last_meal_time) > data->time_to_die)
+	if ((current_time() - data->philos[i].last_meal_time)
+		> data->time_to_die)
 	{
 		pthread_mutex_unlock(&data->simulation_lock);
 		print_status(data, data->philos[i].id, "died");
@@ -43,7 +44,6 @@ int	check_meals_full_dead(t_data *data, int count)
 {
 	if (count == data->number_of_philos)
 	{
-		print_status(data, count, "are all full, end semulation");
 		pthread_mutex_lock(&data->simulation_lock);
 		data->end_simulation = true;
 		pthread_mutex_unlock(&data->simulation_lock);
@@ -52,22 +52,19 @@ int	check_meals_full_dead(t_data *data, int count)
 	return (0);
 }
 
-void	ft_unlock(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < data->number_of_philos)
-	{
-		pthread_mutex_unlock(&data->philos[i].first_fork->fork);
-		pthread_mutex_unlock(&data->philos[i].second_fork->fork);
-	}
-}
-
 void	update_infos_of_philo(t_data *data, t_philo *philo)
 {
 	pthread_mutex_lock(&data->simulation_lock);
 	philo->last_meal_time = current_time();
 	philo->meals_counter += 1;
 	pthread_mutex_unlock(&data->simulation_lock);
+}
+
+void	ft_free(void *ptr, void *ptr2)
+{
+	if (ptr)
+		free(ptr);
+	if (ptr2)
+		free(ptr2);
+	return ;
 }

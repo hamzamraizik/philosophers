@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 11:05:02 by hmraizik          #+#    #+#             */
-/*   Updated: 2024/07/17 11:05:03 by hmraizik         ###   ########.fr       */
+/*   Created: 2024/09/06 18:20:16 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/09/10 18:48:55 by hmraizik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,18 @@ int	init_data(t_data *data)
 	data->philos = malloc(sizeof(t_philo) * data->number_of_philos);
 	if (!data->philos)
 		return (-1);
-	data->forks = malloc(data->number_of_philos * sizeof(t_fork));
+	data->forks = malloc(data->number_of_philos * sizeof(t_mutex));
 	if (!data->forks)
-		return (-1);
+		return (ft_free(data->philos, NULL), -1);
 	if (pthread_mutex_init(&(data->print_lock), NULL) != 0)
-		return (-1);
+		return (ft_free(data->philos, data->forks), -1);
 	if (pthread_mutex_init(&data->simulation_lock, NULL) != 0)
-		return (-1);
+		return (ft_free(data->philos, data->forks), -1);
 	i = -1;
 	while (++i < data->number_of_philos)
 	{
-		if (pthread_mutex_init(&(data->forks[i].fork), NULL) != 0)
-			return (-1);
-		data->forks[i].fork_id = i + 1;
+		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+			return (ft_free(data->philos, data->forks), -1);
 	}
 	return (0);
 }

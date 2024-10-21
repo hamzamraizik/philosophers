@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmraizik <hmraizik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 11:05:20 by hmraizik          #+#    #+#             */
-/*   Updated: 2024/08/27 14:15:36 by hmraizik         ###   ########.fr       */
+/*   Created: 2024/09/06 18:21:06 by hmraizik          #+#    #+#             */
+/*   Updated: 2024/09/06 18:21:08 by hmraizik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,35 +36,6 @@ int	ft_atoi(char *s)
 	return (result);
 }
 
-char	*ft_itoa(int n)
-{
-	char	*str;
-	int		i;
-	int		neg;
-
-	neg = 0;
-	i = 0;
-	if (n < 0)
-	{
-		neg = 1;
-		n = -n;
-	}
-	str = malloc(sizeof(char) * 12);
-	if (!str)
-		return (NULL);
-	if (n == 0)
-		str[i++] = '0';
-	while (n > 0)
-	{
-		str[i++] = n % 10 + '0';
-		n /= 10;
-	}
-	if (neg)
-		str[i++] = '-';
-	str[i] = '\0';
-	return (str);
-}
-
 void	ft_usleep(long time, t_data *data)
 {
 	long	time_before;
@@ -76,4 +47,19 @@ void	ft_usleep(long time, t_data *data)
 			return ;
 		usleep(100);
 	}
+}
+
+int	ft_strlen(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	write(fd, s, ft_strlen(s));
 }
